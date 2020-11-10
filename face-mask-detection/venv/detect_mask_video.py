@@ -1,6 +1,8 @@
 # USAGE
 # python detect_mask_video.py
 
+# https://github.com/chandrikadeb7/Face-Mask-Detection
+
 # import the necessary packages
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -76,6 +78,8 @@ def detect_and_predict_mask(frame, faceNet, maskNet):
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
+ap.add_argument("-v", "--video", required=True,
+	help="path to input video file")
 ap.add_argument("-f", "--face", type=str,
 	default="face_detector",
 	help="path to face detector model directory")
@@ -99,7 +103,8 @@ maskNet = load_model(args["model"])
 
 # initialize the video stream and allow the camera sensor to warm up
 print("[INFO] starting video stream...")
-vs = VideoStream(src=0).start()
+#vs = VideoStream(src=0).start()
+vs = cv2.VideoCapture(args["video"])
 time.sleep(2.0)
 
 # loop over the frames from the video stream
