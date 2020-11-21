@@ -9,6 +9,7 @@ import numpy as np
 import argparse
 import cv2
 import os
+import sys
 
 def mask_image():
 	# construct the argument parser and parse the arguments
@@ -51,6 +52,9 @@ def mask_image():
 	net.setInput(blob)
 	detections = net.forward()
 
+	numOfMasks = 0
+	noMasks = 0
+
 	# loop over the detections
 	for i in range(0, detections.shape[2]):
 		# extract the confidence (i.e., probability) associated with
@@ -88,6 +92,11 @@ def mask_image():
 			label = "Mask" if mask > withoutMask else "No Mask"
 			color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
 
+			if label == "Mask":
+				numOfMasks += 1
+			else:
+				noMasks += 1
+
 			# include the probability in the label
 			label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
 
@@ -97,9 +106,13 @@ def mask_image():
 				cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 			cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
 
-	# show the output image
-	cv2.imshow("Output", image)
+	statsNo = round((noMasks / (numOfMasks + noMasks)) * 100)
+	statsYes = 100 - statsNo
+	title = "{0}% wearing masks  {1}% not wearing masks".format(statsYes, statsNo)
+
+	cv2.imshow(title, image)
 	cv2.waitKey(0)
 	
 if __name__ == "__main__":
 	mask_image()
+	sys.exit(0)

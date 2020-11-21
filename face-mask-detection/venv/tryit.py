@@ -112,17 +112,10 @@ vs = cv2.VideoCapture(args["video"])
 # to have a maximum width of 400 pixels
 
 ret, frame = vs.read()
-print("ret", ret)
-print("type(frame)", type(frame))
-print("frame.shape", frame.shape)
 (h, w, c) = frame.shape
 
 #syntax: cv2.resize(img, (width, height))
 img = imutils.resize(frame, width=400, height=h)
-
-print(w, h)
-print(img.shape)
-
 
 # loop over the frames from the video stream
 while True:
@@ -168,4 +161,4 @@ while True:
 
 # do a bit of cleanup
 cv2.destroyAllWindows()
-#vs.stop()
+
